@@ -189,7 +189,7 @@ usermod -aG sudo hyperadmin
 
 ```bash
 # Проверяем что пользователь создан
-id ahare
+id hyperadmin
 ```
 
 </details>
