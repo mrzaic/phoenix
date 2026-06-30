@@ -162,3 +162,14 @@ hostname -f
 hostname -A
 ```
 </details>
+
+## 🔐 Шаг 3: Безопасность SSH 
+### 1. Создаём sudo-пользователя
+# Создаём пользователя
+adduser admin
+
+# Даём sudo права
+usermod -aG sudo admin
+
+# Проверяем что пользователь создан
+id ahare
