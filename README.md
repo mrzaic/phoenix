@@ -614,3 +614,44 @@ docker logs portainer --tail 20
 Ищем строку, которая начинается с `setup_token=` и копируем длинный ключ. Теперь Portainer позволит создать первого пользователя.
 <br><br>
 </details>
+
+<details>
+<summary>❷ 🔒 Caddy</summary>
+
+## ❷ 🔒 Caddy
+  
+Создаём две конфигурац
+```bash
+# Запускаем Portainer (команда из официальной документации)
+docker run -d \
+  -p 8000:8000 \
+  -p 9443:9443 \
+  --name portainer \
+  --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v portainer_data:/data \
+  portainer/portainer-ce:lts
+
+# Проверяем что запустился
+docker ps | grep portainer
+```
+<br>
+После успешной установки Portainer доступен по адресу:<br>
+
+`https://megaserver.ru:9443`, то есть на 9443 порту вышего сервера.
+
+Поторопитесь туда зайти и создать первого пользователя с правами администратора:<br>
+
+- оставьте логин `admin` или измените его на свой
+- введите сложный пароль
+- поддтвердите свой пароль
+- введите setup token
+
+Найти setup token можно в логах после установки Portainer:
+```bash
+# Проверяем логи
+docker logs portainer --tail 20
+```
+Ищем строку, которая начинается с `setup_token=` и копируем длинный ключ. Теперь Portainer позволит создать первого пользователя.
+<br><br>
+</details>
