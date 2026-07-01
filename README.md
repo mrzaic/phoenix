@@ -174,7 +174,9 @@ hostname -A
 
 ## 🔐 ❸ Безопасность SSH 
 
-### 1. 👤 Создаём sudo-пользователя
+<details>
+<summary>1. 👤 Создаём sudo-пользователя</summary>
+### 👤 Создаём sudo-пользователя
 
 Придумайте имя пользователя, например `hyperadmin`
 
@@ -215,8 +217,11 @@ sudo whoami
 > ➡️ Используйте `sudo -i` для длительной работы.<br>
 > <br>
 > 1️⃣ Используйте `sudo <команда>` для разовых команд.
+</details>
 
-### 2. 🧱 Настройка UFW Firewall
+<details>
+<summary>2. 🧱 Настройка UFW Firewall</summary>
+### 🧱 Настройка UFW Firewall
 
 #### Проверка статуса UFW
 
@@ -369,8 +374,11 @@ To                         Action      From
 80/tcp (v6)                ALLOW IN    Anywhere (v6)              # HTTP
 443/tcp (v6)               ALLOW IN    Anywhere (v6)              # HTTPS
 ```
+</details>
 
-#### Переключаем SSH на новый порт
+<details>
+<summary>3. 🥷 Переключаем SSH на новый порт</summary>
+### 🥷 Переключаем SSH на новый порт
 
 ```bash
 # Определяем новый порт
@@ -410,7 +418,11 @@ LISTEN 0      4096            [::]:222          [::]:*
 ### 🚨 НЕ ЗАКРЫВАЯ текущую сессию/окно, откройте НОВОЕ окно терминала для проверки.<br>
 Подключитесь к серверу по SSH на `222` порт с логином `hyperadmin`. Если всё успешно едем дальше.
 
-#### 🏹 Утилита fail2ban
+</details>
+
+<details>
+<summary>4. 🏹 Утилита fail2ban</summary>
+### 🏹 Утилита fail2ban
 
 Проверка наличия fail2ban
 ```bash
@@ -468,8 +480,11 @@ fail2ban-client status sshd
 # Проверяем общую статистику
 fail2ban-client status
 ```
+</details>
 
-#### Отключае вход по SSH для пользователя `root`
+<details>
+<summary>5. ⛔ Отключае вход по SSH для пользователя `root`</summary>
+### ⛔ Отключае вход по SSH для пользователя ROOT
 
 Теперь можно безопасно отключить root login. Выполните следующий блок команд:
 ```
@@ -490,7 +505,7 @@ systemctl status ssh --no-pager | head -10
 ```bash
 PermitRootLogin no
 ```
-
+</details>
 
 </details>
 
