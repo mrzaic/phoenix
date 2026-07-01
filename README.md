@@ -6,14 +6,17 @@
 
 <details>
   <summary>💰 Покупка домена</summary>
+  <br><br>
 </details>
 
 <details>
   <summary>💰 Аренда сервера</summary>
+  <br><br>
 </details>
 
 <details>
   <summary>🔤 DNS запись, связь домена и сервера</summary>
+  <br><br>
 </details>
 
 <details>
@@ -56,7 +59,7 @@
     <br>
     
     > Ищите импортозамещенную версию без ограничения количества сохраненных сессий подключения.
-
+<br><br>
 </details>
 
 ---
@@ -109,6 +112,7 @@ reboot
 ```
 
 > ⚠️ **Важно:** После перезагрузки подожди 1-2 минуты и подключись снова по SSH.
+<br><br>
 </details>
 
 <details>
@@ -167,6 +171,7 @@ hostname
 hostname -f
 hostname -A
 ```
+<br><br>
 </details>
 
 <details>
@@ -217,6 +222,7 @@ sudo whoami
 > ➡️ Используйте `sudo -i` для длительной работы.<br>
 > <br>
 > 1️⃣ Используйте `sudo <команда>` для разовых команд.
+<br><br>
 </details>
 
 <details>
@@ -330,6 +336,7 @@ ufw status numbered
 9100/TCP     - Prometheus Node Exporter (Метрики железа ОС)
 9200/TCP     - Elasticsearch / OpenSearch (Поиск и аналитика логов)
 ```
+<br><br>
 </details>
 
 Например, выбрали порт 222
@@ -374,6 +381,7 @@ To                         Action      From
 80/tcp (v6)                ALLOW IN    Anywhere (v6)              # HTTP
 443/tcp (v6)               ALLOW IN    Anywhere (v6)              # HTTPS
 ```
+<br><br>
 </details>
 
 <details>
@@ -417,7 +425,7 @@ LISTEN 0      4096            [::]:222          [::]:*
 
 ### 🚨 НЕ ЗАКРЫВАЯ текущую сессию/окно, откройте НОВОЕ окно терминала для проверки.<br>
 Подключитесь к серверу по SSH на `222` порт с логином `hyperadmin`. Если всё успешно едем дальше.
-
+<br><br>
 </details>
 
 <details>
@@ -480,6 +488,7 @@ fail2ban-client status sshd
 # Проверяем общую статистику
 fail2ban-client status
 ```
+<br><br>
 </details>
 
 <details>
@@ -505,9 +514,11 @@ systemctl status ssh --no-pager | head -10
 ```bash
 PermitRootLogin no
 ```
+<br><br>
+</details>
+<br><br>
 </details>
 
-</details>
 <details>
 <summary>🆙 ❹ Авто обновление безопасности</summary>
 
@@ -538,7 +549,7 @@ dpkg -l | grep unattended-upgrades
 # Включаем автоматические обновления
 dpkg-reconfigure -plow unattended-upgrades
 ```
-
+<br><br>
 </details>
 
 ---
@@ -550,7 +561,7 @@ dpkg-reconfigure -plow unattended-upgrades
 
 ## ⓿ 🐳 Docker
 
-Установка Docker
+Установка Docker, выполните блок команд:
 ```bash
 # Устанавливаем Docker из официального репозитория
 apt install docker.io -y
@@ -561,13 +572,13 @@ usermod -aG docker hyperadmin
 # Проверяем
 docker --version
 ```
-
+<br><br>
 </details>
 
 <details>
-<summary>❶ 🏗️ Portiner</summary>
+<summary>❶ 🏗️ Portainer</summary>
 
-## ❶ 🏗️ Portiner
+## ❶ 🏗️ Portainer
   
 Установка Portiner (используется [офицальная инструкци](https://docs.portainer.io/start/install-ce/server/docker/linux)), выполните блок команд:
 ```bash
@@ -584,7 +595,7 @@ docker run -d \
 # Проверяем что запустился
 docker ps | grep portainer
 ```
-
+<br>
 После успешной установки Portainer доступен по адресу:<br>
 
 `https://megaserver.ru:9443`, то есть на 9443 порту вышего сервера.
@@ -602,5 +613,5 @@ docker ps | grep portainer
 docker logs portainer --tail 20
 ```
 Ищем строку, которая начинается с `setup_token=` и копируем длинный ключ. Теперь Portainer позволит создать первого пользователя.
-
+<br><br>
 </details>
