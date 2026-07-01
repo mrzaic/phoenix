@@ -64,9 +64,9 @@
 ## 🪏 Настрока сервера
 
 <details>
-<summary>🔄 Шаг 1: Обновление системы</summary>
+<summary>🔄 ❶ Обновление системы</summary>
 
-## 🔄 Шаг 1: Обновление системы
+## 🔄 ❶ Обновление системы
 
 Перед началом настройки обновим все пакеты системы:
 
@@ -112,9 +112,9 @@ reboot
 </details>
 
 <details>
-<summary>🏷️ Шаг 2: Настройка hostname</summary>
+<summary>🏷️ ❷ Настройка hostname</summary>
 
-## 🏷️ Шаг 2: Настройка hostname
+## 🏷️ ❷ Настройка hostname
 
 По умолчанию хостер устанавливает своё имя (например, `<generator>.<hosting-domain>.<domain>`).
 
@@ -170,9 +170,9 @@ hostname -A
 </details>
 
 <details>
-<summary>🔐 Шаг 3: Безопасность SSH</summary>
+<summary>🔐 ❸ Безопасность SSH</summary>
 
-## 🔐 Шаг 3: Безопасность SSH 
+## 🔐 ❸ Безопасность SSH 
 
 ### 1. 👤 Создаём sudo-пользователя
 
