@@ -460,5 +460,37 @@ systemctl start fail2ban
 systemctl status fail2ban --no-pager
 ```
 
+Проверка что правило (jail) для SSH работает
+```bash
+# Проверяем статус jail для SSH
+fail2ban-client status sshd
+
+# Проверяем общую статистику
+fail2ban-client status
+```
+
+#### Отключае вход по SSH для пользователя `root`
+
+Теперь можно безопасно отключить root login. Выполните следующий блок команд:
+```
+# 1. Отключаем root login
+sed -i 's/^PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+
+# 2. Проверяем что изменилось
+grep "^PermitRootLogin" /etc/ssh/sshd_config
+
+# 3. Перезапускаем SSH
+systemctl restart ssh
+
+# 4. Проверяем что SSH работает
+systemctl status ssh --no-pager | head -10
+```
+
+Ожидаемый результат:
+```bash
+PermitRootLogin no
+```
+
+
 </details>
 
