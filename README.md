@@ -516,7 +516,6 @@ PermitRootLogin no
 ```
 <br><br>
 </details>
-<br><br>
 </details>
 
 <details>
