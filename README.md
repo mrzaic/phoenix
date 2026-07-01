@@ -410,5 +410,55 @@ LISTEN 0      4096            [::]:222          [::]:*
 ### 🚨 НЕ ЗАКРЫВАЯ текущую сессию/окно, откройте НОВОЕ окно терминала для проверки.<br>
 Подключитесь к серверу по SSH на `222` порт с логином `hyperadmin`. Если всё успешно едем дальше.
 
+#### 🏹 Утилита fail2ban
+
+Проверка наличия fail2ban
+```bash
+# Проверяем установлен ли fail2ban
+dpkg -l | grep fail2ban 2>/dev/null && echo "✅ fail2ban установлен" || echo "❌ fail2ban не установлен"
+
+# Если установлен - проверяем статус
+systemctl status fail2ban --no-pager 2>/dev/null || echo "Сервис не активен"
+```
+
+Установка fail2ban
+```bash
+# Устанавливаем fail2ban
+apt install fail2ban -y
+
+# Проверяем установку
+dpkg -l | grep fail2ban
+```
+
+Настройка конфигурации для SSH
+```bash
+# Создаём конфигурацию для SSH на порту 222
+cat > /etc/fail2ban/jail.d/sshd.local << 'EOF'
+[sshd]
+enabled = true
+port = 222
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+bantime = 3600
+findtime = 600
+EOF
+
+# Проверяем что файл создан
+cat /etc/fail2ban/jail.d/sshd.local
+```
+
+Запуск fail2ban
+```bash
+# Добавляем в автозагрузку
+systemctl enable fail2ban
+
+# Запускаем сервис
+systemctl start fail2ban
+
+# Проверяем статус
+systemctl status fail2ban --no-pager
+```
+
 </details>
 
