@@ -543,4 +543,35 @@ dpkg-reconfigure -plow unattended-upgrades
 
 ---
 
-## 🏗️ Оснащение сервера
+## 📋 Оснащение сервера
+
+<details>
+<summary>⓿ 🐳 Docker</summary>
+
+## ⓿ 🐳 Docker
+
+Установка Docker
+```bash
+# Устанавливаем Docker из официального репозитория
+apt install docker.io -y
+
+# Добавляем hyperadmin в группу docker (чтобы не нужен был sudo)
+usermod -aG docker hyperadmin
+
+# Проверяем
+docker --version
+```
+
+</details>
+
+<details>
+<summary>❶ 🏗️ Portiner</summary>
+
+## ❶ 🏗️ Portiner
+  
+Установка Portiner
+
+```bash
+docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:lts
+```
+</details>
