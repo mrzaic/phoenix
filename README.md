@@ -116,15 +116,15 @@ reboot
 
 ## 🏷️ ❷ Настройка hostname
 
-По умолчанию хостер устанавливает своё имя (например, `<generator>.<hosting-domain>.<domain>`).
+По умолчанию хостер устанавливает своё имя (например, `server001.hosting.com`).
 
-Нужно изменить на ваш домен `<ваш_домен/субдомен>`.
+Нужно изменить на ваш домен `megaserver.ru`.
 
 ### Смена hostname:
 
 ```bash
 # Устанавливаем новый hostname
-hostnamectl set-hostname <ваш_домен/субдомен>
+hostnamectl set-hostname megaserver.ru
 ```
 
 ### Универсальная команда смены hostname
@@ -133,9 +133,9 @@ hostnamectl set-hostname <ваш_домен/субдомен>
 
 ```bash
 # Определяем переменные
-OLD_HOST="<generator>.<hosting-domain>.<domain>"
-OLD_HOST_SHORT="<generator>"
-NEW_HOST="<ваш_домен/субдомен>"
+OLD_HOST="server001.hosting.com"
+OLD_HOST_SHORT="server001"
+NEW_HOST="megaserver.ru"
 
 # Одна команда делает всё: замена + удаление алиасов + очистка пробелов
 sed -i "s/$OLD_HOST/$NEW_HOST/g; s/ $OLD_HOST_SHORT//g; s/  */ /g" /etc/hosts
@@ -145,15 +145,15 @@ cat /etc/hosts
 ```
 
 **Что делает команда:**
-1. Заменяет полное старое имя (`<generator>.<hosting-domain>.<domain>`) на новое (`<ваш_домен/субдомен>`)
-2. Удаляет короткое старое имя (`<generator>`) как алиас
+1. Заменяет полное старое имя (`server001.hosting.com`) на новое (`megaserver.ru`)
+2. Удаляет короткое старое имя (`server001`) как алиас
 3. Убирает двойные пробелы (если остались после удаления)
 
 **Результат в `/etc/hosts`:**
 ```
 127.0.0.1 localhost
-127.0.1.1 <ваш_домен/субдомен>
-144.31.157.229 <ваш_домен/субдомен>
+127.0.1.1 megaserver.ru
+144.31.157.229 megaserver.ru
 ```
 
 > 💡 **Совет:** После выполнения команды переподключись по SSH, чтобы увидеть новый hostname в prompt.
@@ -198,7 +198,7 @@ usermod -aG sudo hyperadmin
 id hyperadmin
 ```
 
-⚠️ СТРОГО! Не закрывая текущее окно/сессию, открываем новое окно/сессию и подключаемся к сервееру под созданным польнователем `hyperadmin` и его паролем.
+Для проверки открываем новое окно/сессию и подключаемся к сервееру под созданным польнователем `hyperadmin` и его паролем.
 
 ```bash
 # Проверяем
@@ -327,6 +327,8 @@ ufw status numbered
 ```
 </details>
 
+Например, выбрали порт 222
+
 #### Настройка UFW
 
 ```bash
@@ -337,7 +339,7 @@ ufw --force reset
 ufw default deny incoming
 ufw default allow outgoing
 
-# Открываем SSH на новом порту 222 (или которые вы выбрали)
+# Открываем SSH на новом порту 222 (или который вы выбрали)
 ufw allow 222/tcp comment 'SSH'
 
 # Открываем HTTP/HTTPS
@@ -368,8 +370,45 @@ To                         Action      From
 443/tcp (v6)               ALLOW IN    Anywhere (v6)              # HTTPS
 ```
 
-🚨 НЕ ЗАКРЫВАЙ текущую сессию root!
-Открой НОВОЕ окно терминала для проверки.
+#### Переключаем SSH на новый порт
+
+```bash
+# Определяем новый порт
+NEW_PORT=222
+
+# 1. Меняем порт в sshd_config
+sed -i "s/^#Port 22/Port $NEW_PORT/" /etc/ssh/sshd_config
+sed -i "s/^Port 22/Port $NEW_PORT/" /etc/ssh/sshd_config
+
+# 2. Создаём override для ssh.socket
+mkdir -p /etc/systemd/system/ssh.socket.d
+
+cat > /etc/systemd/system/ssh.socket.d/override.conf << EOF
+[Socket]
+ListenStream=
+ListenStream=0.0.0.0:$NEW_PORT
+ListenStream=[::]:$NEW_PORT
+EOF
+
+# 3. Перезагружаем systemd
+systemctl daemon-reload
+
+# 4. Перезапускаем socket и сервис
+systemctl restart ssh.socket 2>/dev/null || true
+systemctl restart ssh
+
+# 5. Проверяем результат
+ss -tlnp | grep $NEW_PORT
+```
+
+**Ожидаемый результат:**
+```bash
+LISTEN 0      4096         0.0.0.0:222       0.0.0.0:*
+LISTEN 0      4096            [::]:222          [::]:*
+```
+
+### 🚨 НЕ ЗАКРЫВАЯ текущую сессию/окно, откройте НОВОЕ окно терминала для проверки.<br>
+Подключитесь к серверу по SSH на `222` порт с логином `hyperadmin`. Если всё успешно едем дальше.
 
 </details>
 
