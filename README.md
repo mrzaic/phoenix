@@ -1,5 +1,7 @@
 # Phoenix - до последнего вздоха и снова!
 
+---
+
 ## 📐 Подготовительная часть
 
 <details>
@@ -56,6 +58,8 @@
     > Ищите импортозамещенную версию без ограничения количества сохраненных сессий подключения.
 
 </details>
+
+---
 
 ## 🪏 Настрока сервера
 
@@ -214,6 +218,158 @@ sudo whoami
 
 ### 2. 🧱 Настройка UFW Firewall
 
+#### Проверка статуса UFW
 
+```bash
+# Проверяем, установлен ли UFW
+ufw status 2>/dev/null && echo "✅ UFW установлен" || echo "❌ UFW не установлен"
+```
+
+#### Устанавливаем UFW, если не установлен
+
+```bash
+# Устанавливаем UFW
+apt install ufw -y
+
+# Проверяем установку
+ufw status
+```
+
+#### Проверяем конфигурацию UFW
+
+```bash
+# Проверяем текущий статус
+ufw status verbose
+
+# Проверяем какие порты уже открыты
+ufw status numbered
+```
+
+### ℹ️ UFW Firewall как правило, если установлен то находится в выключенном состоянии `Status: inactive`. Далее включаем его и настраиваем доступ только по определённым портам. В том числе со сменой стандартного `22` SSH порта на любой, какой нравится. Кроме этих:
+
+<details>
+<summary>📜 список наиболее популярных и важных зарезервированных портов</summary>
+  
+```markdown
+# ==============================================================================
+# СИСТЕМНЫЕ И СЕТЕВЫЕ СЛУЖБЫ (WELL-KNOWN PORTS: 0 - 1023)
+# ==============================================================================
+20/TCP       - FTP (Передача данных)
+21/TCP       - FTP (Управление/Команды)
+22/TCP/UDP   - SSH (Безопасный shell, SFTP), SCP
+23/TCP       - Telnet (Удаленный доступ, нешифрованный)
+25/TCP       - SMTP (Отправка почты, сервер-сервер)
+43/TCP       - WHOIS (Информация о доменах и IP)
+53/TCP/UDP   - DNS (Разрешение доменных имен)
+67/UDP       - DHCP (Сервер автоматической настройки IP)
+68/UDP       - DHCP (Клиент автоматической настройки IP)
+69/UDP       - TFTP (Простой протокол передачи файлов)
+80/TCP       - HTTP (Стандартный веб-трафик)
+88/TCP/UDP   - Kerberos (Аутентификация в Active Directory)
+110/TCP      - POP3 (Получение почты, нешифрованный)
+123/UDP      - NTP (Синхронизация времени)
+135/TCP      - RPC / DCE Endpoint Mapper (Службы Microsoft)
+137/UDP      - NetBIOS Name Service (Служба имен Windows)
+138/UDP      - NetBIOS Datagram Service (Сетевое окружение Windows)
+139/TCP      - NetBIOS Session Service (Файловый обмен Windows)
+143/TCP      - IMAP (Управление почтой на сервере)
+161/UDP      - SNMP (Мониторинг сетевых устройств)
+162/UDP      - SNMP Trap (Уведомления от устройств)
+179/TCP      - BGP (Протокол динамической маршрутизации интернета)
+389/TCP/UDP  - LDAP (Служба каталогов)
+443/TCP      - HTTPS (Зашифрованный веб-трафик, SSL/TLS)
+443/UDP      - HTTP/3 (QUIC, современный быстрый веб-протокол)
+445/TCP      - SMB / Microsoft-DS (Сетевые папки Windows, Active Directory)
+465/TCP      - SMTPS (Зашифрованная отправка почты, SSL)
+500/UDP      - IPsec / ISAKMP (Основной порт для VPN-туннелей)
+514/UDP      - Syslog (Сбор системных логов)
+853/TCP      - DoT (DNS over TLS, шифрованный системный DNS)
+993/TCP      - IMAPS (Зашифрованный IMAP через SSL)
+995/TCP      - POP3S (Зашифрованный POP3 через SSL)
+
+# ==============================================================================
+# БАЗЫ ДАННЫХ И БРОКЕРЫ (REGISTERED PORTS: 1024+)
+# ==============================================================================
+1433/TCP     - Microsoft SQL Server
+1521/TCP     - Oracle Database
+3306/TCP     - MySQL / MariaDB
+5432/TCP     - PostgreSQL
+5672/TCP     - RabbitMQ (Брокер сообщений, AMQP)
+6379/TCP     - Redis (In-memory СУБД и кэш)
+9092/TCP     - Apache Kafka (Платформа потоковой обработки данных)
+
+# ==============================================================================
+# УДАЛЕННЫЙ ДОСТУП И VPN
+# ==============================================================================
+3389/TCP     - RDP (Удаленный рабочий стол Windows)
+4500/UDP     - IPsec NAT Traversal (Для VPN за пределами NAT)
+5900/TCP     - VNC (Удаленное управление экраном)
+
+# ==============================================================================
+# DEVOPS, КОНТЕЙНЕРИЗАЦИЯ И CI/CD
+# ==============================================================================
+2375/TCP     - Docker Remote API (Незащищенное управление Docker)
+2376/TCP     - Docker Remote API (Защищенное управление через TLS)
+5000/TCP     - Docker Registry (Локальное хранилище образов)
+6443/TCP     - Kubernetes API Server (Главная точка управления кластером)
+8080/TCP     - HTTP Alternate / Jenkins (Сборка CI/CD, Apache Tomcat, Node.js)
+10250/TCP    - Kubernetes Kubelet API (Управление узлами)
+
+# ==============================================================================
+# МОНИТОРИНГ, АНАЛИТИКА И СБОР ЛОГОВ
+# ==============================================================================
+3000/TCP     - Grafana (Дашборды и визуализация метрик)
+5601/TCP     - Kibana (Интерфейс для работы с Elasticsearch)
+8125/UDP     - StatsD (Быстрый сбор метрик приложений)
+9090/TCP     - Prometheus (Сбор и хранение метрик)
+9100/TCP     - Prometheus Node Exporter (Метрики железа ОС)
+9200/TCP     - Elasticsearch / OpenSearch (Поиск и аналитика логов)
+```
+</details>
+
+#### Настройка UFW
+
+```bash
+# Сбрасываем правила
+ufw --force reset
+
+# Политики по умолчанию
+ufw default deny incoming
+ufw default allow outgoing
+
+# Открываем SSH на новом порту 222 (или которые вы выбрали)
+ufw allow 222/tcp comment 'SSH'
+
+# Открываем HTTP/HTTPS
+ufw allow 80/tcp comment 'HTTP'
+ufw allow 443/tcp comment 'HTTPS'
+
+# Включаем firewall
+ufw --force enable
+
+# Проверяем статус
+ufw status verbose
+```
+Ожидаемый результат:
+
+```text
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+222/tcp                    ALLOW IN    Anywhere                   # SSH
+80/tcp                     ALLOW IN    Anywhere                   # HTTP
+443/tcp                    ALLOW IN    Anywhere                   # HTTPS
+222/tcp (v6)               ALLOW IN    Anywhere (v6)              # SSH
+80/tcp (v6)                ALLOW IN    Anywhere (v6)              # HTTP
+443/tcp (v6)               ALLOW IN    Anywhere (v6)              # HTTPS
+```
+
+🚨 НЕ ЗАКРЫВАЙ текущую сессию root!
+Открой НОВОЕ окно терминала для проверки.
 
 </details>
+
